@@ -1,36 +1,59 @@
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 import { calculateWinner } from "../../utilities/helper";
 import Board from "./Board";
 import "./GameStyle.css";
 
-const Game = () => {
+const initialState = {
+  board: Array(9).fill(null),
+  xIsNext: true,
+};
 
-  const [state, setState] = useState({
-    board: Array(9).fill(null),
-    xIsNext: true
-  });
+const gameReducer = (state, action) => {
+  switch (action.type) {
+    case "CLICK": {
+      const { board, xIsNext } = state;
+      const { index, winner } = action.payload;
+
+      if (winner || board[index]) return state; //if return; will return undefined
+
+      const nextState = JSON.parse(JSON.stringify(state));
+      nextState.board[index] = xIsNext ? "X" : "O";
+      nextState.xIsNext = !xIsNext;
+
+      return nextState;
+    }
+
+    case "RESET":
+      return initialState;
+
+    default:
+      console.log("Error");
+    // throw new Error('Error');
+  }
+
+  return state;
+};
+
+const Game = () => {
+  //useReducer
+  const [state, dispatch] = useReducer(gameReducer, initialState);
 
   const winner = calculateWinner(state.board);
 
   const handleClick = (index) => {
-    const boardCopy = [...state.board];
-
-    if (winner || boardCopy[index]) return;
-
-    boardCopy[index] = state.xIsNext ? "X" : "O";
-
-    setState({
-      ...state,
-      board: boardCopy,
-      xIsNext: !state.xIsNext
+    dispatch({
+      type: "CLICK",
+      payload: {
+        index, //index : index
+        winner,
+      },
     });
   };
 
   const handleResetGame = () => {
-    setState({
-      ...state,
-      board: Array(9).fill(null),
-      xIsNext: true
+    dispatch({
+      type: "RESET",
+      payload: {},
     });
   };
 
