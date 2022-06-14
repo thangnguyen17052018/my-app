@@ -1,6 +1,7 @@
 import "./App.css";
 import Button from "./components/button/Button";
 import Card from "./components/card/Card";
+import CardList from "./components/card/CardList";
 import Counter from "./components/counter/Counter";
 import Game from "./components/tictactoe/Game";
 import Toggle from "./components/toggle/Toggle";
@@ -14,7 +15,14 @@ function App() {
   }
   return (
     <div>
-      <Card></Card>
+      <CardList>
+        <Card secondary={true}></Card>
+        <Card></Card>
+        <Card></Card>
+        <Card></Card>
+        <Card></Card>
+        <Card></Card>
+      </CardList>
     </div>
   );
 }
